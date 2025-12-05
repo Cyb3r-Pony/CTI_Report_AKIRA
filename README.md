@@ -4,6 +4,8 @@ This repository contains a comprehensive Cyber Threat Intelligence (CTI) report 
 
 This report provides detailed analysis of AKIRA's tactics, techniques, and procedures (TTPs), mapped to the MITRE ATT&CK framework, along with comprehensive indicators of compromise (IOCs), exploited vulnerabilities, and actionable mitigation strategies.
 
+You can find the website here: https://cyb3r-pony.github.io/CTI_Report_AKIRA/
+
 ---
 
 ## 🎯 Key Statistics
