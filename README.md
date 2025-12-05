@@ -173,80 +173,110 @@ Major Updates: Quarterly or when significant new campaigns are observed
 Minor Updates: Monthly for new IOCs and CVEs
 Last Updated: December 2025
 
-📚 Sources & References
-Primary Intelligence Sources
+## 📚 Sources & References
 
-Ransomware.live - IOC Database
+### Primary Intelligence Sources
+
+**Ransomware.live - IOC Database**  
 https://www.ransomware.live/ioc
-Ransomware.live - TTPs Database
+
+**Ransomware.live - TTPs Database**  
 https://www.ransomware.live/ttps
-CISA StopRansomware Newsroom
+
+**CISA StopRansomware Newsroom**  
 https://www.cisa.gov/stopransomware/newsroom
-MITRE ATT&CK Framework
+
+**MITRE ATT&CK Framework**  
 https://attack.mitre.org/
-VirusTotal
+
+**VirusTotal**  
 https://www.virustotal.com/gui/home/upload
 
+---
 
-AKIRA Ransomware Threat Actor Intelligence
+### AKIRA Ransomware Threat Actor Intelligence
 
-Ransomware.live - AKIRA Group Profile
+**Ransomware.live - AKIRA Group Profile**  
 https://www.ransomware.live/group/akira
-AKIRA Tor Leak Site (⚠️ Caution: Dark Web)
-akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion
-AKIRA TTPs GitHub Repository
+
+**AKIRA Tor Leak Site** ⚠️ *(Caution: Dark Web)*  
+`akiral2iz6a7qgd3ayp3l6yub7xx2uep76idk3u2kollpj5z3z636bad.onion`
+
+**AKIRA TTPs GitHub Repository**  
 https://github.com/crocodyli/ThreatActors-TTPs/blob/main/Akira/Readme.md
 
+---
 
-Victim Statistics & Targeting
+### Victim Statistics & Targeting
 
-AKIRA Group Statistics
+**AKIRA Group Statistics**  
 https://www.ransomware.live/groupstats/akira
-AKIRA Victim Geographical Map
+
+**AKIRA Victim Geographical Map**  
 https://www.ransomware.live/map?q=akira&year=full
-Primary Target Sectors: Business Services and Technology
 
+**Primary Target Sectors:** Business Services and Technology
 
-Tactics, Techniques & Procedures (TTPs)
+---
 
-AKIRA TTPs - Main Documentation
+### Tactics, Techniques & Procedures (TTPs)
+
+**AKIRA TTPs - Main Documentation**  
 https://github.com/crocodyli/ThreatActors-TTPs/blob/main/Akira/Readme.md
-AKIRA TTPs - Repository Root
+
+**AKIRA TTPs - Repository Root**  
 https://github.com/crocodyli/ThreatActors-TTPs/tree/main/Akira
-AKIRA TTP Detailed Analysis
+
+**AKIRA TTP Detailed Analysis**  
 https://github.com/crocodyli/ThreatActors-TTPs/blob/main/Akira/Akira-TTP.md
-AKIRA Exploited CVEs
+
+**AKIRA Exploited CVEs**  
 https://github.com/crocodyli/ThreatActors-TTPs/blob/main/Akira/CVEs-Akira.md
-AKIRA Tools & Utilities
+
+**AKIRA Tools & Utilities**  
 https://github.com/crocodyli/ThreatActors-TTPs/blob/main/Akira/Tools-Akira.md
-CISA Advisory - #StopRansomware: Akira Ransomware (AA24-109A)
+
+**CISA Advisory - #StopRansomware: Akira Ransomware (AA24-109A)**  
 https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-109a
-MITRE ATT&CK - AKIRA Group (G1024)
+
+**MITRE ATT&CK - AKIRA Group (G1024)**  
 https://attack.mitre.org/groups/G1024/
-MITRE ATT&CK - AKIRA Software (S1129)
+
+**MITRE ATT&CK - AKIRA Software (S1129)**  
 https://attack.mitre.org/software/S1129/
-Trellix Research - AKIRA Ransomware Analysis
+
+**Trellix Research - AKIRA Ransomware Analysis**  
 https://www.trellix.com/blogs/research/akira-ransomware/
-S-RM Inform - Ransomware in Focus: Meet Akira
+
+**S-RM Inform - Ransomware in Focus: Meet Akira**  
 https://www.s-rminform.com/latest-thinking/ransomware-in-focus-meet-akira
 
+---
 
-Detection & Mitigation Techniques
+### Detection & Mitigation Techniques
 
-YARA Rule for AKIRA Detection
+**YARA Rule for AKIRA Detection**  
 https://www.ransomware.live/yara/Akira/Akira.yar
 
+---
 
-Additional Security Resources
+### Additional Security Resources
 
-FBI Internet Crime Complaint Center (IC3)
+**FBI Internet Crime Complaint Center (IC3)**  
 https://www.ic3.gov/
-CISA Known Exploited Vulnerabilities Catalog
+
+**CISA Known Exploited Vulnerabilities Catalog**  
 https://www.cisa.gov/known-exploited-vulnerabilities-catalog
-No More Ransom Project
+
+**No More Ransom Project**  
 https://www.nomoreransom.org/
-NIST Cybersecurity Framework
+
+**NIST Cybersecurity Framework**  
 https://www.nist.gov/cyberframework
-CIS Controls
+
+**CIS Controls**  
 https://www.cisecurity.org/controls
 
+---
+
+**⚠️ Security Notice:** The Tor onion link provided leads to the threat actor's dark web infrastructure. Access only through proper security protocols and for legitimate research/investigation purposes. Never engage with ransomware operators directly.
